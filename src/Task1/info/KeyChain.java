@@ -1,13 +1,15 @@
 package Task1.info;
 
 import Task1.Connectable;
-import java.security.Key;
+import Task1.util.FIleService;
+
+import java.io.File;
 import java.util.Objects;
 
 public class KeyChain implements Connectable {
     private String key;
     private String value;
-    Key[] keysArray;
+    KeyChain [] keysArray = FIleService.readFile();
 
     public void setKey(String key) {
         this.key = key;
@@ -34,30 +36,31 @@ public class KeyChain implements Connectable {
 
     @Override
     public boolean openConnection() {
-        System.out.println("Connection is open now");
         return true;
     }
 
     @Override
     public boolean closeConnection() {
-        System.out.println("Connection is closed now");
         return false;
     }
 
     @Override
-    public void checkConnection() {
+    public boolean checkConnection() {
         if (openConnection()){
             System.out.println("Connection is open");
         } else {
             System.out.println("Connection is closed");
-        }
+        } return true;
     }
 
     @Override
     public void readAString(int index) {
-        int i = 0;
-        if (keysArray[i] == keysArray[index]){
-            System.out.println(keysArray[index]);
+        try {
+            if (openConnection()){
+                System.out.println(keysArray[index]);
+            }
+        } catch (Exception e){
+            System.out.println("No connection");
         }
     }
 
@@ -75,7 +78,7 @@ public class KeyChain implements Connectable {
 
     public void readAString(String key) {
         int index = 0;
-        for (Key item : keysArray) {
+        for (KeyChain item : keysArray) {
             if (Objects.equals(getKey(), key)) {
                 System.out.println(item);
             }
@@ -89,21 +92,26 @@ public class KeyChain implements Connectable {
 
     @Override
     public void calculateRecords() {
-
+        int number = keysArray.length;
+        System.out.println("Number of records " + number);
     }
 
     @Override
     public void addARecord() {
-
+        keysArray[5].setKey("K5");
+        keysArray[5].setValue("HHH");
+        FIleService.writeFile(keysArray);
     }
 
     @Override
     public void updateRecordValue(int index) {
+        keysArray[index].setKey("H1");
+        keysArray[index].setValue("LLL");
+        FIleService.writeFile(keysArray);
 
     }
 
     @Override
     public void updateRecordContents(String key) {
-
     }
 }
